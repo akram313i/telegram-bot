@@ -1,8 +1,7 @@
 from flask import Flask
 from threading import Thread
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-import yt_dlp
+from telegram.ext import Application, CommandHandler, ContextTypes
 import os
 
 app = Flask(__name__)
@@ -18,26 +17,12 @@ if not TOKEN:
     exit(1)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("🎬 أهلاً! أرسل رابط فيديو للتحميل.")
-
-async def video(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    url = update.message.text
-    await update.message.reply_text("⏳ جاري التحميل...")
-    try:
-        ydl_opts = {"format": "best[ext=mp4]", "outtmpl": "video.%(ext)s", "quiet": True}
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            file = ydl.prepare_filename(info)
-            await update.message.reply_video(open(file, "rb"))
-            os.remove(file)
-    except Exception as e:
-        await update.message.reply_text(f"❌ فشل التحميل: {str(e)}")
+    await update.message.reply_text("🎬 البوت يعمل!")
 
 def run_bot():
     try:
         bot_app = Application.builder().token(TOKEN).build()
         bot_app.add_handler(CommandHandler("start", start))
-        bot_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, video))
         print("✅ البوت يعمل...")
         bot_app.run_polling()
     except Exception as e:
