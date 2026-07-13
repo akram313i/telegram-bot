@@ -146,9 +146,6 @@ def run_bot():
     bot_app.run_polling()
 
 if __name__ == '__main__':
-    # تشغيل البوت في خيط منفصل
     Thread(target=run_bot).start()
-    
-    # تشغيل خادم Flask
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port, debug=False)
